@@ -65,5 +65,7 @@
 Все скриншоты и схемы лежат в папке **[/assets](./assets)**:
 
 * **[Топология](./assets/network_topology)** — наглядная схема корпоративной сети в draw.io.
-* **[Скриншоты работы](./assets/network_togology)** — базовые принципы, цели и требования по защите информации в корпоративной сети.
+* **[VirtualBox](./assets/VirtualBox_screens)** — настройка и конфигурация виртуальных машин.
+* **[Workplace](./assets/Workplace_screens)** — рабочее пространство в области рабочих станций и межсетевого экрана OPNsense.
+* **[WazuhDashboard](./assets/WazuhDashboard_screens)** — интерфейс и фичи Wazuh SIEM Администратора ИБ.
 
