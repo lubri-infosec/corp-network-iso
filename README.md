@@ -74,3 +74,8 @@
 * **[WazuhDashboard](./assets/WazuhDashboard_screens)** — интерфейс и фичи Wazuh SIEM Администратора ИБ.
 * **[ActiveResponse](./assets/ActiveResponse_screens)** — настройка active response в ossec.config и попытка атаки SSH сервера по 22 порту.
 
+Все рабочие конфигурации ключевых узлов лежат в папке **[/configs](./configs)**:
+* **[server_ossec.conf](server_ossec.conf)** — конфигурация главного сервера Wazuh (UbuntuServer-VTech). Настроен прием Syslog от шлюза OPNsense (UDP 514) и правила автоматического реагирования Active Response (firewall-drop).
+* **[agent_arm_ossec.conf](agent_arm_ossec.conf)** — конфигурация агента на контролируемом АРМ сотрудника (armuser-vtech). Настроен контроль целостности файлов (FIM / syscheck) в режиме реального времени для директории с базой данных.
+* **[opnsense-config.xml](opnsense-config.xml)** - обезличенный резервный конфиг межсетевого экрана OPNsense (правила NAT, настройки интерфейсов и пересылка логов Syslog).
+
