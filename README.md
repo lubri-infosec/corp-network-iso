@@ -11,13 +11,6 @@
 * **UbuntuManagerISO-VTech** — рабочее место администратора ИБ. Нужна для доступа к веб-интерфейсу Wazuh Dashboard по HTTPS (порт 443) прямо изнутри изолированного сегмента.
 * **armuser-vtech** — рабочая станция обычного сотрудника. Здесь лежат тестовые данные (`vtech_secret_db`) и имитируются атаки.
 
-
-
-
-<img width="812" height="702" alt="Диаграмма без названия drawio (1)" src="https://github.com/user-attachments/assets/9c2c075c-778c-40ef-8c8b-14aefe9eac69" />
-
-
-
 ## Что было сделано
 
 ### Сеть, OPNsense и сбор логов
