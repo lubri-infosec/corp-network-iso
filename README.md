@@ -46,12 +46,17 @@
 * Прогнал рабочую станцию через встроенный модуль **SCA** по профилю **CIS Ubuntu Linux 22.04 LTS Benchmark**.
 * Изучил отчет о проверке, разобрал критичные несоответствия (например, отсутствие флага `nodev` при монтировании раздела `/tmp`) и посмотрел рекомендации по их устранению (Rationale и Remediation).
 
+### Активное реагирование на атаки (Active Response)
+* Настроил на сервере Wazuh Manager в (`/var/ossec/etc/ossec.conf`) автоматическую блокировку атакующих через встроенный скрипт `firewall-drop` по триггерам (`5712 / 5763`) матрицы **MITRE ATT&CK** локально на атакуемом узле `<location>local</location>` на 5 минут.
+* Проверил защиту в действии: с ManagerISO (`10.10.1.58`) запустил брутфорс по SSH серверу на АРМ Сотрудника под фейковым пользователем.
+* После многих неудачных попыток входа сработало правило **MITRE ATT&CK** - агент моментально заблокировал IP адрес Администратора ИБ через пакетный фильтр (`connection timed out`), следом через 5 минут снял блокировку процесс которой наглядно видно в (`active-responses.log`) и Threat Hunting (`rule.id 651 / 652`) на Wazuh Dashboard.
+
 
 ## Использованный стек
-* **SIEM:** Wazuh (Indexer, Manager, Server, Dashboard), Wazuh Agent, FIM, Threat Hunting, SCA.
-* **Сеть:** OPNsense, VirtualBox, Destination NAT, Syslog (UDP 514), Netplan.
-* **Защита данных:** LUKS, GPG (AES-256), `shred`.
-* **ОС и утилиты:** РЕД ОС, Ubuntu Live-Server/Desktop, `tcpdump`, `apt`/`dpkg`, Python, SQLite3.
+* **SIEM:** Wazuh (Indexer, Manager, Server, Dashboard), Wazuh Agent, FIM, Threat Hunting, SCA, Active Response (firewall-drop, ossec.conf), MITRE ATT&CK.
+* **Сеть:** OPNsense, VirtualBox, Destination NAT, Syslog (UDP 514), Netplan, iptables.
+* **Защита данных:** LUKS, GPG (AES-256), `shred`, `gpg`.
+* **ОС и утилиты:** РЕД ОС, Ubuntu Live-Server/Desktop, `tcpdump`, `apt`/`dpkg`, `ssh`, `systemctl`, Python, SQLite3.
 
 ## Что лежит в папках
 
@@ -67,4 +72,5 @@
 * **[VirtualBox](./assets/VirtualBox_screens)** — настройка и конфигурация виртуальных машин и локальной сети.
 * **[Workspace](./assets/Workspace_screens)** — рабочее пространство в области рабочих станций и межсетевого экрана OPNsense.
 * **[WazuhDashboard](./assets/WazuhDashboard_screens)** — интерфейс и фичи Wazuh SIEM Администратора ИБ.
+* **[ActiveResponse](./assets/ActiveResponse_screens)** — настройка active response в ossec.config и попытка атаки SSH сервера по 22 порту.
 
