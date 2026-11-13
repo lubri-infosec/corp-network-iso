@@ -66,6 +66,6 @@
 
 * **[Топология](./assets/network_topology)** — наглядная схема корпоративной сети в draw.io.
 * **[VirtualBox](./assets/VirtualBox_screens)** — настройка и конфигурация виртуальных машин и локальной сети.
-* **[Workplace](./assets/Workspace_screens)** — рабочее пространство в области рабочих станций и межсетевого экрана OPNsense.
+* **[Workspace](./assets/Workspace_screens)** — рабочее пространство в области рабочих станций и межсетевого экрана OPNsense.
 * **[WazuhDashboard](./assets/WazuhDashboard_screens)** — интерфейс и фичи Wazuh SIEM Администратора ИБ.
 
