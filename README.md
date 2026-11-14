@@ -55,7 +55,7 @@
 ## Использованный стек
 * **SIEM:** Wazuh (Indexer, Manager, Server, Dashboard), Wazuh Agent, FIM, Threat Hunting, SCA, Active Response (firewall-drop, ossec.conf), MITRE ATT&CK.
 * **Сеть:** OPNsense, VirtualBox, Destination NAT, Syslog (UDP 514), Netplan, iptables.
-* **Защита данных:** LUKS, GPG (AES-256), `shred`, `gpg`.
+* **Защита данных:** LUKS, GPG (AES-256), `shred`.
 * **ОС и утилиты:** РЕД ОС, Ubuntu Live-Server/Desktop, `tcpdump`, `apt`/`dpkg`, `ssh`, `systemctl`, Python, SQLite3.
 
 ## Что лежит в папках
