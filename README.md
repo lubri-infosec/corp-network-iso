@@ -56,6 +56,7 @@
 ### Служба каталогов Active Directory (Samba AD DC)
 * Развернул контроллер домена (`UbuntuDC-VTech`), отключил systemd-resolved для освобождения 53-го порта и инициализировал домен vtech.local через samba-tool domain provision с перенаправлением внешних DNS-запросов на OPNsense (`10.10.1.1`).
 * Создал организационную структуру подразделений OU и учетных записей согласно регламенту ИБ: OU - Security Admins учетная запись Администратора ИБ (secadmin добавлен в группу Domain Admins), OU - Employees учетная запись сотрудника employee1, OU - Workstations контейнер для введенных в домен рабочих станций (ManagerISO и armuser-vtech).
+* Ввел оба 
 
 
 ## Использованный стек
