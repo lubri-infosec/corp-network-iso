@@ -81,7 +81,7 @@
 * **[Workspace](./assets/Workspace_screens)** — рабочее пространство в области рабочих станций и межсетевого экрана OPNsense.
 * **[WazuhDashboard](./assets/WazuhDashboard_screens)** — интерфейс и фичи Wazuh SIEM Администратора ИБ.
 * **[ActiveResponse](./assets/ActiveResponse_screens)** — настройка active response в ossec.config и попытка атаки SSH сервера по 22 порту.
-* **[ActiveDirectory](./assets/ActiveResponse_screens)** — развертывание контроллера домена UbuntuDC-VTech, структура OU и вход под доменными учетными записями.
+* **[ActiveDirectory](./assets/ActiveDirectory_screens)** — развертывание контроллера домена UbuntuDC-VTech, структура OU и вход под доменными учетными записями.
   
 
 Все рабочие конфигурации ключевых узлов лежат в папке **[/configs](./configs)**:
