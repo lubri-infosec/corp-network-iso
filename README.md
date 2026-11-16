@@ -7,15 +7,17 @@
 Весь контур работает в изолированной виртуальной сети **`vtech-lan`** (`10.10.1.0/24`) внутри Oracle VirtualBox:
 
 * **OPNsense** — шлюз и межсетевой экран. Раздает адреса по DHCP, выпускает сеть наружу через NAT, фильтрует трафик и шлет логи в SIEM.
+* **UbuntuDC-VTech** - контроллер домена Active Directory (Samba AD, vtech.local). Отвечает за централизованную аутентификацию Kerberos , внутренний DNS и ролевую модель доступа. Диск зашифрован через **LUKS** на этапе установки ОС. 
 * **UbuntuServer-VTech (`10.10.1.92`)** — сервер мониторинга. Установлен полный стек Wazuh (`all-in-one`: Indexer, Server, Manager, Dashboard). Диск зашифрован через **LUKS** на этапе установки ОС.
-* **UbuntuManagerISO-VTech** — рабочее место администратора ИБ. Нужна для доступа к веб-интерфейсу Wazuh Dashboard по HTTPS (порт 443) прямо изнутри изолированного сегмента.
-* **armuser-vtech** — рабочая станция обычного сотрудника. Здесь лежат тестовые данные (`vtech_secret_db`) и имитируются атаки.
+* **UbuntuManagerISO-VTech** — рабочее место администратора ИБ. Нужна для доступа к веб-интерфейсу Wazuh Dashboard по HTTPS (порт 443) прямо изнутри изолированного сегмента. Добавлен в домен vtech.local, вход выполняется под доменной учетной записью Администратора ИБ (`secadmin@vtech.local`) группы Domain Admins с правами sudoers.
+* **armuser-vtech** — рабочая станция обычного сотрудника. Здесь лежат тестовые данные (`vtech_secret_db`) и имитируются атаки. Добавлен в домен vtech.local, вход выполняется под доменной учетной записью Сотрудника (`employee1@vtech.local`) без прав sudo.
 
 ## Что было сделано
 
 ### Сеть, OPNsense и сбор логов
 * Перевел сервер Wazuh на статический IP (`10.10.1.92`) через **Netplan**, чтобы не плавала адресация.
 * В **OPNsense** настроил правила Destination NAT для проброса 443 порта на сервер Wazuh, а в самом VirtualBox пробросил порты `443` и `8443`.
+* В службе Dnsmasq DNS & DHCP на OPNsense прописал опции dns-server (`10.10.1.10`) и domain-name (`vtech.local`), чтобы все рабочие станции автоматически находили контроллер домена.
 * Столкнулся с тем, что хостовая **РЕД ОС** резала локальные порты, поэтому пришлось развернуть отдельный АРМ админа внутри самой виртуальной сети.
 * Настроил отправку системных логов и логов файрволла с OPNsense на Wazuh по **UDP 514** (`System → Settings → Logging`), а в `/var/ossec/etc/ossec.conf` разрешил прием логов из подсети `10.10.1.0/24`. Проверил, что пакеты реально долетают:
   ```bash
@@ -24,7 +26,7 @@
 
 ### Установка Wazuh и агентов
 * Развернул Wazuh с флагом `-a`. Во время установки словил сетевые таймауты и битые зависимости `dpkg` — пришлось вручную чистить `/var/ossec`, удалять зависшие скрипты в `/var/lib/dpkg/info/`, править базу пакетов и обновлять кэш `apt`.
-* Поставил агентов (`wazuh-agent`) на обе рабочие станции (`UbuntuManagerISO-VTech` и `armuser-vtech`), привязал их к серверу и проверил связь.
+* Поставил агентов (`wazuh-agent`) на обе рабочие станции (`UbuntuManagerISO-VTech` и `armuser-vtech`), привязал их к серверу и проверил связь. Установил wazuh-agent также на контроллер домена (`UbuntuDC-VTech`) привязал его к серверу `10.10.1.92` и проверил поступление телеметрии в **Threat Hunting**.
 
 ### Шифрование базы и контроль целостности (FIM)
 * Написал небольшой скрипт на **Python**, который создает базу **SQLite3** (`vtech_secret_db`) с тестовыми персональными данными сотрудников.
@@ -51,10 +53,15 @@
 * Проверил защиту в действии: с ManagerISO (`10.10.1.58`) запустил брутфорс по SSH серверу на АРМ Сотрудника под фейковым пользователем.
 * После многих неудачных попыток входа сработало правило **MITRE ATT&CK** - агент моментально заблокировал IP адрес Администратора ИБ через пакетный фильтр (`connection timed out`), следом через 5 минут снял блокировку процесс которой наглядно видно в (`active-responses.log`) и Threat Hunting (`rule.id 651 / 652`) на Wazuh Dashboard.
 
+### Служба каталогов Active Directory (Samba AD DC)
+* Развернул контроллер домена (`UbuntuDC-VTech`), отключил systemd-resolved для освобождения 53-го порта и инициализировал домен vtech.local через samba-tool domain provision с перенаправлением внешних DNS-запросов на OPNsense (`10.10.1.1`).
+* Создал организационную структуру подразделений OU и учетных записей согласно регламенту ИБ: OU - Security Admins учетная запись Администратора ИБ (secadmin добавлен в группу Domain Admins), 
+
 
 ## Использованный стек
 * **SIEM:** Wazuh (Indexer, Manager, Server, Dashboard), Wazuh Agent, FIM, Threat Hunting, SCA, Active Response (firewall-drop, ossec.conf), MITRE ATT&CK.
 * **Сеть:** OPNsense, VirtualBox, Destination NAT, Syslog (UDP 514), Netplan, iptables.
+* **Active Directory и IAM**: Samba AD DC, Kerberos (krb5), realmd, sssd, mkhomedir, Dnsmasq DNS & DHCP.
 * **Защита данных:** LUKS, GPG (AES-256), `shred`.
 * **ОС и утилиты:** РЕД ОС, Ubuntu Live-Server/Desktop, `tcpdump`, `apt`/`dpkg`, `ssh`, `systemctl`, Python, SQLite3.
 
@@ -73,6 +80,8 @@
 * **[Workspace](./assets/Workspace_screens)** — рабочее пространство в области рабочих станций и межсетевого экрана OPNsense.
 * **[WazuhDashboard](./assets/WazuhDashboard_screens)** — интерфейс и фичи Wazuh SIEM Администратора ИБ.
 * **[ActiveResponse](./assets/ActiveResponse_screens)** — настройка active response в ossec.config и попытка атаки SSH сервера по 22 порту.
+* **[ActiveDirectory](./assets/ActiveResponse_screens)** — развертывание контроллера домена UbuntuDC-VTech, структура OU и вход под доменными учетными записями.
+  
 
 Все рабочие конфигурации ключевых узлов лежат в папке **[/configs](./configs)**:
 * **[server_ossec.conf](./configs/server_ossec.conf)** — конфигурация главного сервера Wazuh (UbuntuServer-VTech). Настроен прием Syslog от шлюза OPNsense (UDP 514) и правила автоматического реагирования Active Response (firewall-drop).
