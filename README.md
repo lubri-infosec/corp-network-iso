@@ -60,13 +60,18 @@
 * Создал организационную структуру подразделений OU и учетных записей согласно регламенту ИБ: OU - `Security Admins` учетная запись Администратора ИБ (secadmin добавлен в группу Domain Admins), OU - `Employees` учетная запись сотрудника employee1, OU - `Workstations` контейнер для введенных в домен рабочих станций (ManagerISO и armuser-vtech).
 * Ввел оба АРМ в домен через связку `realmd` и `sssd`, настроил автоматическое создание домашних директорий (`mkhomedir`) и ограничил права sudoer исключительно для группы Domain Admins на рабочей станции Администратора ИБ.
 
+### Безопасное администрирование по SSH (SSH Hardening)
+* Сгенерировал на рабочем месте Администратора ИБ (`ManagerISO`) под доменной учетной записью `secadmin@vtech.local` пару асимметричных ключей по алгоритму **Ed25519** (`ssh-keygen -t ed25519`), защитил приватный ключ парольной фразой (**Passphrase**) и изолировал правами доступа (`chmod 600`).
+* Распространил открытый ключ (`id_ed25519.pub`) на критические узлы инфраструктуры: контроллер домена (`UbuntuDC-VTech`), сервер SIEM (`UbuntuServer-VTech`) и межсетевой экран (`OPNsense`), а также настроил клиентский конфиг `~/.ssh/config` для быстрого подключения по псевдонимам (`ssh dc`, `ssh srv`, `ssh fw`).
+* Ужесточил конфигурацию SSH-демона на серверах Ubuntu (`sshd_config` и `50-cloud-init.conf`): запретил прямой вход под `root` (`PermitRootLogin no`) и полностью отключил парольную аутентификацию (`PasswordAuthentication no`, `KbdInteractiveAuthentication no`), оставив вход строго по ключам (`PubkeyAuthentication yes`).
+* На шлюзе **OPNsense** ограничил работу SSH исключительно интерфейсом внутренней сети (`LAN`), закрыл вход по паролям и проверил отказ при несанкционированных попытках доступа (`Permission denied (publickey)`).
 
 ## Использованный стек
 * **SIEM:** Wazuh (Indexer, Manager, Server, Dashboard), Wazuh Agent, FIM, Threat Hunting, SCA, Active Response (firewall-drop, ossec.conf), MITRE ATT&CK.
 * **Сеть:** OPNsense, VirtualBox, Destination NAT, Syslog (UDP 514), Netplan, iptables.
 * **Active Directory и IAM**: Samba AD DC, Kerberos (krb5), `realmd`, `sssd`, `mkhomedir`, Dnsmasq DNS & DHCP.
 * **Защита данных:** LUKS, GPG (AES-256), `shred`.
-* **ОС и утилиты:** РЕД ОС, Ubuntu Live-Server/Desktop, `tcpdump`, `apt`/`dpkg`, `ssh`, `systemctl`, Python, SQLite3.
+* **ОС и утилиты:** РЕД ОС, Ubuntu Live-Server/Desktop, `tcpdump`, `apt`/`dpkg`, `ssh` (`Ed25519`, `sshd_config`), `systemctl`, Python, SQLite3.
 
 ## Что лежит в папках
 
@@ -84,6 +89,7 @@
 * **[WazuhDashboard](./assets/WazuhDashboard_screens)** — интерфейс и фичи Wazuh SIEM Администратора ИБ.
 * **[ActiveResponse](./assets/ActiveResponse_screens)** — настройка active response в ossec.config и попытка атаки SSH сервера по 22 порту.
 * **[ActiveDirectory](./assets/ActiveDirectory_screens)** — развертывание контроллера домена UbuntuDC-VTech, структура OU и вход под доменными учетными записями.
+* **[SSHHardening](./assets/ActiveDirectory_screens)** — генерация ключей Ed25519 c Passphrase, настройка `~/.ssh/config` и подключение по ключу к OPNsense и серверам.
   
 
 Все рабочие конфигурации ключевых узлов лежат в папке **[/configs](./configs)**:
