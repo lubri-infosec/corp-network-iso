@@ -62,7 +62,7 @@
 ## Использованный стек
 * **SIEM:** Wazuh (Indexer, Manager, Server, Dashboard), Wazuh Agent, FIM, Threat Hunting, SCA, Active Response (firewall-drop, ossec.conf), MITRE ATT&CK.
 * **Сеть:** OPNsense, VirtualBox, Destination NAT, Syslog (UDP 514), Netplan, iptables.
-* **Active Directory и IAM**: Samba AD DC, Kerberos (krb5), realmd, sssd, mkhomedir, Dnsmasq DNS & DHCP.
+* **Active Directory и IAM**: Samba AD DC, Kerberos (krb5), `realmd`, `sssd`, `mkhomedir`, Dnsmasq DNS & DHCP.
 * **Защита данных:** LUKS, GPG (AES-256), `shred`.
 * **ОС и утилиты:** РЕД ОС, Ubuntu Live-Server/Desktop, `tcpdump`, `apt`/`dpkg`, `ssh`, `systemctl`, Python, SQLite3.
 
