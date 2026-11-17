@@ -54,6 +54,7 @@
 * Настроил на сервере Wazuh Manager в (`/var/ossec/etc/ossec.conf`) автоматическую блокировку атакующих через встроенный скрипт `firewall-drop` по триггерам (`5712 / 5763`) матрицы **MITRE ATT&CK** локально на атакуемом узле `<location>local</location>` на 5 минут.
 * Проверил защиту в действии: с ManagerISO (`10.10.1.58`) запустил брутфорс по SSH серверу на АРМ Сотрудника под фейковым пользователем.
 * После многих неудачных попыток входа сработало правило **MITRE ATT&CK** - агент моментально заблокировал IP адрес Администратора ИБ через пакетный фильтр (`connection timed out`), следом через 5 минут снял блокировку процесс которой наглядно видно в (`active-responses.log`) и Threat Hunting (`rule.id 651 / 652`) на Wazuh Dashboard.
+* Настроил кастомную интеграцию **Wazuh Integrator (`custom-ntfy.py`)** с push-сервисом **ntfy.sh** для мгновенной доставки критических алертов (`lvl 7+`) на мобильное устройство Администратора ИБ в реальном времени (узел, уровень, событие).
 
 ### Служба каталогов Active Directory (Samba AD DC)
 * Развернул контроллер домена (`UbuntuDC-VTech`), отключил systemd-resolved для освобождения 53-го порта и инициализировал домен vtech.local через samba-tool domain provision с перенаправлением внешних DNS-запросов на OPNsense (`10.10.1.1`).
@@ -67,7 +68,7 @@
 * На шлюзе **OPNsense** ограничил работу SSH исключительно интерфейсом внутренней сети (`LAN`), закрыл вход по паролям и проверил отказ при несанкционированных попытках доступа (`Permission denied (publickey)`).
 
 ## Использованный стек
-* **SIEM:** Wazuh (Indexer, Manager, Server, Dashboard), Wazuh Agent, FIM, Threat Hunting, SCA, Active Response (firewall-drop, ossec.conf), MITRE ATT&CK.
+* **SIEM:** Wazuh (Indexer, Manager, Server, Dashboard), Wazuh Agent, Wazuh Integrator (custom-ntfy.py, ntfy.sh), FIM, Threat Hunting, SCA, Active Response (firewall-drop, ossec.conf), MITRE ATT&CK.
 * **Сеть:** OPNsense, VirtualBox, Destination NAT, Syslog (UDP 514), Netplan, iptables.
 * **Active Directory и IAM**: Samba AD DC, Kerberos (krb5), `realmd`, `sssd`, `mkhomedir`, Dnsmasq DNS & DHCP.
 * **Защита данных:** LUKS, GPG (AES-256), `shred`.
@@ -90,6 +91,7 @@
 * **[ActiveResponse](./assets/ActiveResponse_screens)** — настройка active response в ossec.config и попытка атаки SSH сервера по 22 порту.
 * **[ActiveDirectory](./assets/ActiveDirectory_screens)** — развертывание контроллера домена UbuntuDC-VTech, структура OU и вход под доменными учетными записями.
 * **[SSHHardening](./assets/SSHHardening_screens)** — генерация ключей Ed25519 c Passphrase, настройка ssh/config и подключение по ключу к OPNsense и серверам.
+* **[WazuhMobileAlert](./assets/WazuhMobileAlert_screens)** — мгновенные push-уведомления на смартфон Администратора ИБ при срабатывании правила Wazuh SIEM.
   
 
 Все рабочие конфигурации ключевых узлов лежат в папке **[/configs](./configs)**:
