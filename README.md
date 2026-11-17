@@ -9,7 +9,7 @@
 <img width="1042" height="702" alt="network_topology" src="https://github.com/user-attachments/assets/d8f5a3c3-70ae-4763-b6c9-e4fe34eece43" />
 
 * **OPNsense** — шлюз и межсетевой экран. Раздает адреса по DHCP, выпускает сеть наружу через NAT, фильтрует трафик и шлет логи в SIEM.
-* **UbuntuDC-VTech ('10.10.1.10')** - контроллер домена Active Directory (`vtech.local`). Отвечает за централизованную аутентификацию Kerberos , внутренний DNS и ролевую модель доступа. Диск зашифрован через **LUKS** на этапе установки ОС. 
+* **UbuntuDC-VTech (`10.10.1.10`)** - контроллер домена Active Directory (`vtech.local`). Отвечает за централизованную аутентификацию Kerberos , внутренний DNS и ролевую модель доступа. Диск зашифрован через **LUKS** на этапе установки ОС. 
 * **UbuntuServer-VTech (`10.10.1.92`)** — сервер мониторинга. Установлен полный стек Wazuh (`all-in-one`: Indexer, Server, Manager, Dashboard). Диск зашифрован через **LUKS** на этапе установки ОС.
 * **UbuntuManagerISO-VTech** — рабочее место администратора ИБ. Нужна для доступа к веб-интерфейсу Wazuh Dashboard по HTTPS (порт 443) прямо изнутри изолированного сегмента. Добавлен в домен vtech.local, вход выполняется под доменной учетной записью Администратора ИБ (`secadmin@vtech.local`) группы Domain Admins с правами sudoers.
 * **armuser-vtech** — рабочая станция обычного сотрудника. Здесь лежат тестовые данные (`vtech_secret_db`) и имитируются атаки. Добавлен в домен vtech.local, вход выполняется под доменной учетной записью Сотрудника (`employee1@vtech.local`) без прав sudo.
