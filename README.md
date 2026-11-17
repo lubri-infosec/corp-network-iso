@@ -6,7 +6,7 @@
 
 Весь контур работает в изолированной виртуальной сети **`vtech-lan`** (`10.10.1.0/24`) внутри Oracle VirtualBox:
 
-![Топология корпоративной сети](./assets/topology.png)
+<img width="1042" height="702" alt="network_topology" src="https://github.com/user-attachments/assets/d8f5a3c3-70ae-4763-b6c9-e4fe34eece43" />
 
 * **OPNsense** — шлюз и межсетевой экран. Раздает адреса по DHCP, выпускает сеть наружу через NAT, фильтрует трафик и шлет логи в SIEM.
 * **UbuntuDC-VTech ('10.10.1.10')** - контроллер домена Active Directory (`vtech.local`). Отвечает за централизованную аутентификацию Kerberos , внутренний DNS и ролевую модель доступа. Диск зашифрован через **LUKS** на этапе установки ОС. 
