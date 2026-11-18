@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <opnsense>
-  <trigger_initial_wizard/>
   <theme>opnsense</theme>
   <system>
     <optimization>normal</optimization>
@@ -14,7 +13,7 @@
       <scope>system</scope>
       <description>System Administrators</description>
       <priv>page-all</priv>
-      <member>0</member>
+      <member>0,2000</member>
       <source_networks/>
     </group>
     <user uuid="52b5797c-2ccb-4eca-80e9-ecada3389df6">
@@ -26,7 +25,7 @@
       <authorizedkeys/>
       <otp_seed/>
       <shell/>
-      <password>***REDACTED***</password>
+      <password>[REDACTED]</password>
       <pwd_changed_at>1794301685.8599</pwd_changed_at>
       <landing_page/>
       <comment/>
@@ -37,15 +36,39 @@
       <descr>System Administrator</descr>
       <dashboard/>
     </user>
+    <user uuid="e1ed9c93-15d0-46a1-97f1-3f1f5ecf1e53">
+      <uid>2000</uid>
+      <name>secadmin</name>
+      <disabled>0</disabled>
+      <scope>user</scope>
+      <expires/>
+      <authorizedkeys>[REDACTED]</authorizedkeys>
+      <otp_seed/>
+      <shell>/bin/sh</shell>
+      <password>[REDACTED]</password>
+      <pwd_changed_at>1794919631.7469</pwd_changed_at>
+      <landing_page/>
+      <comment/>
+      <email/>
+      <apikeys/>
+      <priv/>
+      <language/>
+      <descr/>
+      <dashboard/>
+    </user>
     <timezone>Etc/UTC</timezone>
     <timeservers>0.opnsense.pool.ntp.org 1.opnsense.pool.ntp.org 2.opnsense.pool.ntp.org 3.opnsense.pool.ntp.org</timeservers>
     <webgui>
       <protocol>https</protocol>
       <ssl-certref>6af2e24d4cfec</ssl-certref>
+      <port/>
+      <ssl-ciphers/>
+      <interfaces/>
+      <compression/>
     </webgui>
     <disablenatreflection>yes</disablenatreflection>
     <usevirtualterminal>1</usevirtualterminal>
-    <disableconsolemenu/>
+    <disableconsolemenu>1</disableconsolemenu>
     <powerd_ac_mode>hadp</powerd_ac_mode>
     <powerd_battery_mode>hadp</powerd_battery_mode>
     <powerd_normal_mode>hadp</powerd_normal_mode>
@@ -56,6 +79,15 @@
     <lb_use_sticky>1</lb_use_sticky>
     <ssh>
       <group>admins</group>
+      <noauto>1</noauto>
+      <interfaces>lan</interfaces>
+      <kex/>
+      <ciphers/>
+      <macs/>
+      <keys/>
+      <keysig/>
+      <rekeylimit/>
+      <enabled>enabled</enabled>
     </ssh>
     <firmware version="1.0.1" persisted_at="1794300633.58" description="Firmware settings">
       <mirror/>
@@ -66,6 +98,8 @@
       <reboot>0</reboot>
       <aux>0</aux>
     </firmware>
+    <serialspeed>115200</serialspeed>
+    <primaryconsole>video</primaryconsole>
   </system>
   <interfaces>
     <wan>
@@ -108,7 +142,7 @@
       <virtual>1</virtual>
     </lo0>
   </interfaces>
-  <dnsmasq version="1.0.9" persisted_at="1794300634.28" description="Dnsmasq DNS and DHCP">
+  <dnsmasq version="1.0.9" persisted_at="1794833401.95" description="Dnsmasq DNS and DHCP">
     <enable>1</enable>
     <regdhcp>0</regdhcp>
     <regdhcpstatic>0</regdhcpstatic>
@@ -148,9 +182,46 @@
     <no_ident>1</no_ident>
     <dhcp_ranges uuid="e89cc6d6-3b8a-4a20-9d32-87394027f667">
       <interface>lan</interface>
+      <set_tag/>
       <start_addr>10.10.1.50</start_addr>
       <end_addr>10.10.1.200</end_addr>
+      <subnet_mask/>
+      <constructor/>
+      <mode/>
+      <prefix_len/>
+      <lease_time/>
+      <domain_type>range</domain_type>
+      <domain/>
+      <nosync>0</nosync>
+      <ra_mode/>
+      <ra_priority/>
+      <ra_mtu/>
+      <ra_interval/>
+      <ra_router_lifetime/>
+      <description/>
     </dhcp_ranges>
+    <dhcp_options uuid="d7463d10-f7a7-4e06-b4a7-fad9bdd6530f">
+      <type>set</type>
+      <option>6</option>
+      <option6/>
+      <interface>lan</interface>
+      <tag/>
+      <set_tag/>
+      <value>10.10.1.10</value>
+      <force>0</force>
+      <description/>
+    </dhcp_options>
+    <dhcp_options uuid="7ef02e38-425e-45e4-b76d-02b43b5c4638">
+      <type>set</type>
+      <option>15</option>
+      <option6/>
+      <interface>lan</interface>
+      <tag/>
+      <set_tag/>
+      <value>vtech.local</value>
+      <force>0</force>
+      <description/>
+    </dhcp_options>
   </dnsmasq>
   <nat>
     <outbound>
@@ -918,9 +989,9 @@
     </unboundplus>
   </OPNsense>
   <revision>
-    <username>root@10.0.2.2</username>
-    <description>/api/syslog/settings/set made changes</description>
-    <time>1794469728.79</time>
+    <username>root@10.10.1.58</username>
+    <description>/system_advanced_admin.php made changes</description>
+    <time>1794919847.84</time>
   </revision>
   <hasync version="1.0.2" persisted_at="1794300633.61" description="HA sync">
     <disablepreempt>0</disablepreempt>
@@ -951,7 +1022,7 @@
     <caref/>
     <crt>LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUhFakNDQlBxZ0F3SUJBZ0lVS1FuRkw1NkVjSmlIRXlqUFhHRDE1dUpGOE9Jd0RRWUpLb1pJaHZjTkFRRUwKQlFBd2dZWXhHakFZQmdOVkJBTU1FVTlRVG5ObGJuTmxMbWx1ZEdWeWJtRnNNUXN3Q1FZRFZRUUdFd0pPVERFVgpNQk1HQTFVRUNBd01XblZwWkMxSWIyeHNZVzVrTVJVd0V3WURWUVFIREF4TmFXUmtaV3hvWVhKdWFYTXhMVEFyCkJnTlZCQW9NSkU5UVRuTmxibk5sSUhObGJHWXRjMmxuYm1Wa0lIZGxZaUJqWlhKMGFXWnBZMkYwWlRBZUZ3MHkKTmpFeE1UQXdPRFV3TlRsYUZ3MHlOekV5TVRJd09EVXdOVGxhTUlHR01Sb3dHQVlEVlFRRERCRlBVRTV6Wlc1egpaUzVwYm5SbGNtNWhiREVMTUFrR0ExVUVCaE1DVGt3eEZUQVRCZ05WQkFnTURGcDFhV1F0U0c5c2JHRnVaREVWCk1CTUdBMVVFQnd3TVRXbGtaR1ZzYUdGeWJtbHpNUzB3S3dZRFZRUUtEQ1JQVUU1elpXNXpaU0J6Wld4bUxYTnAKWjI1bFpDQjNaV0lnWTJWeWRHbG1hV05oZEdVd2dnSWlNQTBHQ1NxR1NJYjNEUUVCQVFVQUE0SUNEd0F3Z2dJSwpBb0lDQVFDZVVyM25TUFEyUlNzRjJiZEcwZ01Xcm9FWGk1YnQvcEE5RC93U3VNREpoMy9FNmZiRUtjL3pVVTVYCnFWSDhnU3NtUVNKakNSUjJ6NUxxVGc3akM0TzlaZm0wNDIrWFhBanU5N05PTTV5L2FHMXY0OVJJbHJKS0VFOTYKMEtHSEpGSmU3YkpLbDdhV1d5YU8rek1ZZnhmaWpyc3VIVEsrUUYxWXpHdzByY3hxYy84U2ozY1pKd003ajlieAoya2ZRSERxSEZ6QkpCM29ad1NldDAwenJ1QWRQZUdSTGp5azZkTXFUdTh2Q3ZadktQcVJFUVloK2UweWhJaWViCnY2RlhPdVN2eHlxSzlSSGFDR1hwd0xISzhpZUE5bGJrMWh4SHFqRTJLZVBuVkZBdjh3TmZwdFhwMVpPWXNpVCsKMHNtL1FBdHFmd3Bpa0g0bzVzTzZhalNDdVNCR1BWUE9KMXFqOUZpQURMaWdONzUwZWNmVnRnYVUxLzd2Rm91UQpuMFUzdGFNZVpNWWJ0T3lNWnZVV0duaWxiK3JTWDlZN2J5aFFDbjZ5dUZOMnNaeEYxRUJRYnExOTVhL2F6QWFnCkd0ZTdSVXQvT0toK2s2TXJJU1lBSlU0MUJBNDJTV2RzcW15bEJZeGgyc3AweE5PcGd0V1hIa3RUbEszYzRpZ1EKTFIyVnYzcGRKTWx5V2VjakE5TzBYM2tEZ1U1YmU1a3ZhTmZnemtzNDRVc3dUY0VMSFBDYzhSQVdjV0lqNTRJcgpBbzQwbUI2Nkk0aXE3SFV5ZXJoa2JCZ3JCSnZOUzA5dGswY2ZTRFdDRkZBM1A3VmdCVWdqQTR4b3dLcW0za3VCCmF4MC9hdExyZjAwTlFXZkQ2VndwZ1haZDNHV1JSc2x0L3B0OGZiSFRDL0JPRXFSbGh3SURBUUFCbzRJQmREQ0MKQVhBd0NRWURWUjBUQkFJd0FEQVJCZ2xnaGtnQmh2aENBUUVFQkFNQ0JrQXdOQVlKWUlaSUFZYjRRZ0VOQkNjVwpKVTlRVG5ObGJuTmxJRWRsYm1WeVlYUmxaQ0JUWlhKMlpYSWdRMlZ5ZEdsbWFXTmhkR1V3SFFZRFZSME9CQllFCkZGRFpFbG9vci9ueGxxR0wvRDdCelU3aGpYd2dNSUd3QmdOVkhTTUVnYWd3Z2FXaGdZeWtnWWt3Z1lZeEdqQVkKQmdOVkJBTU1FVTlRVG5ObGJuTmxMbWx1ZEdWeWJtRnNNUXN3Q1FZRFZRUUdFd0pPVERFVk1CTUdBMVVFQ0F3TQpXblZwWkMxSWIyeHNZVzVrTVJVd0V3WURWUVFIREF4TmFXUmtaV3hvWVhKdWFYTXhMVEFyQmdOVkJBb01KRTlRClRuTmxibk5sSUhObGJHWXRjMmxuYm1Wa0lIZGxZaUJqWlhKMGFXWnBZMkYwWllJVUtRbkZMNTZFY0ppSEV5alAKWEdEMTV1SkY4T0l3SFFZRFZSMGxCQll3RkFZSUt3WUJCUVVIQXdFR0NDc0dBUVVGQ0FJQ01Bc0dBMVVkRHdRRQpBd0lGb0RBY0JnTlZIUkVFRlRBVGdoRlBVRTV6Wlc1elpTNXBiblJsY201aGJEQU5CZ2txaGtpRzl3MEJBUXNGCkFBT0NBZ0VBZ2ptTHYvM3Y5LzdUc09sTDVmK1ZrWUVUbUE4TmRuZEd2UTVCUmZqUVZwNmFxTFNobkNzWngrMVMKOEY5OXpvQUhWK2FMRXpYaUx6eHh6eUYzTmhvZUlpd0thc3p3Umw3Y0N3bFlOUmZNUXRXem94b2d2SDFJWVJ0cQoyVm9KNk5OTVQvU0M5QWF6a1RvQnR6MUlZNU1vdngvaW4vMmNYVlJ5d3RqMEQ1NEVsdjNaZ0Z1T2MzSDZKRHRnCkpsOUtDTURJU1NubHlpR0cxZ1pOeDlValZid3lsOTdvekVOdndETWwxQnp4Z3I1REd4ajkzZG9uSmh6REpDZlYKelNGQzBKbHl6VUdPdm5xc3VMdTBoN244NnBnc1d0RVk1aUZ4SHlQc04zNGFrNFlUN1VobDIxci9VS2hPL0FySQpzbEcrR05VWXRqZ1JTTkx0R2ZWTXpNK0NRLzRXN0orTGdscGlDVVlBNHVpZWZrc0pKdDBMc2lpc3RjUkYvVGdWCkIyZUNrbGhqRG5IRUlFMVg0VHd4ZXp4SUVDK24ydW9oUlRza1RWeG9sc1JjQU85Sk50d01KOE9xOWQwdEQzRk4KM2JUdDh3N1p5Q2ozclVjZW5NR3o0Y25WQTlLcURONXlJRlMxK2dUaFVSd2VnSGdEYjRMUVBOaG1Ob25JRnkwVQp2bW0zanZOS0V1NkZycU5rU3Z5dnZtUnl2ZnRuVnAyTWVtaFBCMlZweG5XV2ZPTk92MndyVSsydndsdDNYL3R5Cm8vcjBjMTEyNk8weWZ1SHNRZWVmWk8xZndBZzE4Qk9uM2Z6eU9XVlgwbWpaY3MwWUxTbUJWa0J2Y25oNnhqUHUKQ2Vub2lQNncxS09lSFhOdkp5MWg4ZjdEd2hBQjdRVnczMU9jOXhETC83TW5JZmxUbHRjPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==</crt>
     <csr/>
-    <prv>***REDACTED***</prv>
+    <prv>[REDACTED]</prv>
   </cert>
   <cert uuid="b90e75bd-5d7c-4aba-89da-ce79d6955a7f">
     <refid>6af2e24d4cfec</refid>
@@ -959,6 +1030,7 @@
     <caref/>
     <crt>LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUhFakNDQlBxZ0F3SUJBZ0lVQVJUcjVQeU5JbVZTQ1RSVFN1b3lwT3gwRlJ3d0RRWUpLb1pJaHZjTkFRRUwKQlFBd2dZWXhHakFZQmdOVkJBTU1FVTlRVG5ObGJuTmxMbWx1ZEdWeWJtRnNNUXN3Q1FZRFZRUUdFd0pPVERFVgpNQk1HQTFVRUNBd01XblZwWkMxSWIyeHNZVzVrTVJVd0V3WURWUVFIREF4TmFXUmtaV3hvWVhKdWFYTXhMVEFyCkJnTlZCQW9NSkU5UVRuTmxibk5sSUhObGJHWXRjMmxuYm1Wa0lIZGxZaUJqWlhKMGFXWnBZMkYwWlRBZUZ3MHkKTmpFeE1UQXdPVEl5TWpGYUZ3MHlOekV5TVRJd09USXlNakZhTUlHR01Sb3dHQVlEVlFRRERCRlBVRTV6Wlc1egpaUzVwYm5SbGNtNWhiREVMTUFrR0ExVUVCaE1DVGt3eEZUQVRCZ05WQkFnTURGcDFhV1F0U0c5c2JHRnVaREVWCk1CTUdBMVVFQnd3TVRXbGtaR1ZzYUdGeWJtbHpNUzB3S3dZRFZRUUtEQ1JQVUU1elpXNXpaU0J6Wld4bUxYTnAKWjI1bFpDQjNaV0lnWTJWeWRHbG1hV05oZEdVd2dnSWlNQTBHQ1NxR1NJYjNEUUVCQVFVQUE0SUNEd0F3Z2dJSwpBb0lDQVFDM0RCZ25FU3BEWFVzckdsUlNIVFdmV0tiMFlmcTBrYTFOWHBPWHEzc2cwSUlwb0VwZ0FCUWN6Wm1yCnpmWS9ZMWxVZWlxR3YwKzZhK2NpcVIvQlF6VUNvU2JDUmc4WVVJa2VhalFyUGI2MlJBVlNlbHpxdHZMaVUrdGUKVDRJTWtoL2p6aFZnZDkzcUFPTUZhSXFhdDFJVzcySHVRcUVIZkF3bGVPdWwzUjVZZzZzTFRTcnVWYUxib2c3RAo2eHIvRjY0S3dsVFVuV3p4SVlGcGIwejFJSkpmNkxPeGNBR2dMUG9NYTIrekp5clFXN2NMdVpQR2NXaXVzRUFKClo2WUR1TWNXUmtnNlJ1WHJLeHQvUVUyUVBDWGh2MXlmNlBKZlI1RXlRMEJnRERWNmJEUndKOWptQXJCeFhiSHgKWUZKZTkyaWhFR3lnRExhYmlxcENqRlZFVGYwQnRBZW9IRUhuTWllWUZJMVNub0xIR3h5STVmdVlMV3dEbHhFMQpHTFpJeTJFY2hlVk1HOXZFdGlRQ2JHdzRRQXdzWnQrd2RwQWlkSzZ2WTNtdjNQdkM4b0hSUHk1OHBESjBVTzN5ClF4TXIzaFJxUDhOeW0yeldTWHoyRVREUWZQVDFIenA3QjRWbWhQc2ZwcHFsUi93OXF6QTJRQ3IreUdqZ1EwMVQKZWk4WWgwVGRIV3VnMCtNZWJJWTBFbnBVL283dk9vZ0tpSXVuMkx4WHlyRlNzRDU1Q2h0MythZkpaUStQQTVMRgpGQWNlcGx5T0pjT3lDSzdoS3NEamFMVk9wa3BDaFErQ00vTlZXd3JNT01kc3QyWHZ4YlZZRVJhck1qQ3RQVVZxCjBGUkM4SlNkS1hwdmNNRmNiYzVOZkhpN21ET1RSKzBZNklKaEJuSFZDMzBBSm85VUxRSURBUUFCbzRJQmREQ0MKQVhBd0NRWURWUjBUQkFJd0FEQVJCZ2xnaGtnQmh2aENBUUVFQkFNQ0JrQXdOQVlKWUlaSUFZYjRRZ0VOQkNjVwpKVTlRVG5ObGJuTmxJRWRsYm1WeVlYUmxaQ0JUWlhKMlpYSWdRMlZ5ZEdsbWFXTmhkR1V3SFFZRFZSME9CQllFCkZKTE1PUk5YcGZzQlVMcnBrTE1VT2Y4TGVFakpNSUd3QmdOVkhTTUVnYWd3Z2FXaGdZeWtnWWt3Z1lZeEdqQVkKQmdOVkJBTU1FVTlRVG5ObGJuTmxMbWx1ZEdWeWJtRnNNUXN3Q1FZRFZRUUdFd0pPVERFVk1CTUdBMVVFQ0F3TQpXblZwWkMxSWIyeHNZVzVrTVJVd0V3WURWUVFIREF4TmFXUmtaV3hvWVhKdWFYTXhMVEFyQmdOVkJBb01KRTlRClRuTmxibk5sSUhObGJHWXRjMmxuYm1Wa0lIZGxZaUJqWlhKMGFXWnBZMkYwWllJVUFSVHI1UHlOSW1WU0NUUlQKU3VveXBPeDBGUnd3SFFZRFZSMGxCQll3RkFZSUt3WUJCUVVIQXdFR0NDc0dBUVVGQ0FJQ01Bc0dBMVVkRHdRRQpBd0lGb0RBY0JnTlZIUkVFRlRBVGdoRlBVRTV6Wlc1elpTNXBiblJsY201aGJEQU5CZ2txaGtpRzl3MEJBUXNGCkFBT0NBZ0VBWDkySjFlS1BCMmFEdFg5cmxxOGpVMmZQMzU3U1I3b2pQak5oalNpVEoxOTdRK25GbklwWVpyRWoKRFphSitBYzdkOTlMeDcrSUdXYm9tck1nUHdUUnBpb0ZKQ1krTndWVm5OYS96d3ZtRUZYRTFSWGRWd2FaZFRLTQpkMmN0Vi92eXA1YWd1Mm5HR05QUGFzY1dKMTc0SmpVM21UYzUrU0J3UnZWc0xYcnpHN0swSWd2Yk5KMHVOL3ZMCjlENlowNlZPZk9NVlQ0MFBTSWFySjdpalQycUJDNGlIRHozTDlob0oxTmNmKzA5Z3AwVlVCamg5VVBoVGoyZlIKZk9vQ3c2Njd0L2VyN3llQnhKdHRmbkRhaTVIMnlxdVY5MXFvNWY2anROd3ljVGdYOWd1YjlPbjVQMlNMRlVTMgpHNnhRcFJqYUtJYUdkTVVPQlV0WlhiRVJjQzd2TnA3MGp2dzZFMkNtYklyU3pYS0FuRzBMTjV5SFdQSWwyckQ0CjNKKzFURWFjalYyYnNIeE4vQXFKWWNFWXR0UGo3bTZKMkphOXhVLzZjQnpUQndnTDRjcnFRc05vNmYxcGo5TFkKM1Q2QkxMbmtWbllNZ0Y5WmlnbkwraGNvcDRzcWRnN2d3WUJ3L2x0OHdmVFNQQnZ0aDMwTXE0S2xWcE5HSnYwYgpjVzNteXg3Wm1SOE5xL2pVTmRUVW54d1c2V0JjM2x2aVVpYTFIczlVUjNPamkwUmhaRmhhemd6NjV5MWppSXFXCkNLOUJzNnVwekJoaTNOU2cvMDA4V2o1TnI5ckZoR3c0a3ZLaFhkck5sVmhTUHgyK0RUVXAzQWNQL1ZGUEFrTlkKTDl2YUo5QllqZDFxNjRNYS9DcUJJallGTDhNdkl5eU1ISmdGWVl5Zll4OWFZeGh5ZW44PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==</crt>
     <csr/>
-    <prv>***REDACTED***</prv>
+    <prv>[REDACTED]</prv>
   </cert>
+  <syslog/>
 </opnsense>
