@@ -106,7 +106,8 @@
   
 
 Все рабочие конфигурации ключевых узлов лежат в папке **[/configs](./configs)**:
-* **([opnsense-config.xml](configs/opnsense-config.xml)** — обезличенный резервный конфиг межсетевого экрана OPNsense (сегментация интерфейсов, правила фильтрации, NAT и пересылка логов Syslog).
+
+* **[opnsense-config.xml](configs/opnsense-config.xml)** — обезличенный резервный конфиг межсетевого экрана OPNsense (сегментация интерфейсов, правила фильтрации, NAT и пересылка логов Syslog).
 * **[server_ossec.conf](configs/server_ossec.conf)** — конфигурация главного сервера Wazuh (UbuntuServer-VTech): прием Syslog от OPNsense (UDP 514), правила Active Response (firewall-drop) и интеграция мобильных оповещений (custom-ntfy).
 * **[local_rules.xml](configs/local_rules.xml)** — пользовательские правила корреляции Wazuh SIEM для выявления неудачных попыток входа и атак перебора паролей (Brute-force) в домене Active Directory.
 * **[custom-ntfy.py](configs/custom-ntfy.py)** — Python-скрипт интеграции Wazuh Integrator с push-сервисом ntfy.sh для мгновенной отправки критических алертов (lvl 7+) на смартфон Администратора ИБ.
