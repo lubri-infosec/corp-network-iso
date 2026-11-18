@@ -106,7 +106,19 @@
   
 
 Все рабочие конфигурации ключевых узлов лежат в папке **[/configs](./configs)**:
-* **[server_ossec.conf](./configs/server_ossec.conf)** — конфигурация главного сервера Wazuh (UbuntuServer-VTech). Настроен прием Syslog от шлюза OPNsense (UDP 514) и правила автоматического реагирования Active Response (firewall-drop).
-* **[agent_arm_ossec.conf](./configs/agent_arm_ossec.conf)** — конфигурация агента на контролируемом АРМ сотрудника (armuser-vtech). Настроен контроль целостности файлов (FIM / syscheck) в режиме реального времени для директории с базой данных.
-* **[opnsense-config.xml](./configs/opnsense-config.xml)** - обезличенный резервный конфиг межсетевого экрана OPNsense (правила NAT, настройки интерфейсов и пересылка логов Syslog).
+* **([opnsense-config.xml](configs/opnsense-config.xml)** — обезличенный резервный конфиг межсетевого экрана OPNsense (сегментация интерфейсов, правила фильтрации, NAT и пересылка логов Syslog).
+* **[server_ossec.conf](configs/server_ossec.conf)** — конфигурация главного сервера Wazuh (UbuntuServer-VTech): прием Syslog от OPNsense (UDP 514), правила Active Response (firewall-drop) и интеграция мобильных оповещений (custom-ntfy).
+* **[local_rules.xml](configs/local_rules.xml)** — пользовательские правила корреляции Wazuh SIEM для выявления неудачных попыток входа и атак перебора паролей (Brute-force) в домене Active Directory.
+* **[custom-ntfy.py](configs/custom-ntfy.py)** — Python-скрипт интеграции Wazuh Integrator с push-сервисом ntfy.sh для мгновенной отправки критических алертов (lvl 7+) на смартфон Администратора ИБ.
+* **[srv_sshd_config](configs/srv_sshd_config)** — ужесточенная конфигурация SSH-демона (аутентификация строго по ключам Ed25519, запрет входа root и отключение парольного доступа).
+* **[iptables_srv.v4](configs/iptables_srv.v4)** — правила локального межсетевого экрана сервера SIEM (Default Deny) с доступом к портам управления только с АРМ Администратора ИБ.
+* **[srv_netplan.yaml](configs/srv_netplan.yaml)** — сетевая конфигурация статической IP адресации сервера UbuntuServer-VTech.
+* **[backup_siem.sh](configs/backup_siem.sh)** — скрипт автоматического резервного копирования конфигураций Wazuh, правил, SSH и iptables с шифрованием алгоритмом AES-256 (openssl) и ротацией старше 7 дней.
+* **[dc_smb.conf](configs/dc_smb.conf)** — конфигурация контроллера домена Samba Active Directory DC (UbuntuDC-VTech) с включенным аудитом аутентификации и службы каталогов (auth_audit, dsdb_audit).
+* **[dc_krb5.conf](configs/dc_krb5.conf)** — конфигурация протокола аутентификации Kerberos для области VTECH.LOCAL.
+* **[dc_netplan.yaml](configs/dc_netplan.yaml)** — сетевая конфигурация контроллера домена с привязкой к локальному DNS серверу AD.
+* **[dc_ossec.conf](configs/dc_ossec.conf)** — конфигурация агента Wazuh на контроллере домена со сбором журнала аудита Samba AD (log.samba).
+* **[iptables_dc.v4](configs/iptables_dc.v4)** — правила локального межсетевого экрана контроллера домена (Default Deny) с разрешением сервисных портов AD для доменных узлов и SSH строго для АРМ Администратора ИБ.
+* **[backup_ad.sh](configs/backup_ad.sh)** — скрипт автоматического создания консистентного слепка базы Active Directory (samba-tool domain backup offline) с шифрованием AES-256 (openssl) и ротацией старше 7 дней.
+* **[agent_arm_ossec.conf](configs/agent_arm_ossec.conf)** — конфигурация агента на контролируемом АРМ сотрудника (armuser-vtech) с контролем целостности файлов (FIM / syscheck) в реальном времени.
 
