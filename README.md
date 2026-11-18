@@ -68,9 +68,13 @@
 * Ужесточил конфигурацию SSH-демона на серверах Ubuntu (`sshd_config` и `50-cloud-init.conf`): запретил прямой вход под `root` (`PermitRootLogin no`) и полностью отключил парольную аутентификацию (`PasswordAuthentication no`, `KbdInteractiveAuthentication no`), оставив вход строго по ключам (`PubkeyAuthentication yes`).
 * На шлюзе **OPNsense** ограничил работу SSH исключительно интерфейсом внутренней сети (`LAN`), закрыл вход по паролям и проверил отказ при несанкционированных попытках доступа (`Permission denied (publickey)`).
 
+### Локальный межсетевой экран на серверах (Host-based Firewall)
+* Настроил локальную фильтрацию трафика через `iptables` на серверах **`UbuntuServer-VTech`** (`srv`) и `UbuntuDC-VTech` (`dc`) по принципу **Default Deny** (`INPUT DROP`, `FORWARD DROP`) для защиты от бокового перемещения внутри сети.
+* Ограничил доступ к портам управления (SSH `22`, Wazuh Dashboard `443`) исключительно с IP адреса Администратора ИБ (`10.10.1.58`), оставив для подсети `10.10.1.0/24` только необходимые сервисные порты агентов Wazuh (`1514–1515`) и службы каталогов Active Directory (`DNS`, `Kerberos`, `LDAP`, `SMB`).
+
 ## Использованный стек
 * **SIEM:** Wazuh (Indexer, Manager, Server, Dashboard), Wazuh Agent, Wazuh Integrator (custom-ntfy.py, ntfy.sh), кастомные правила корреляции (local_rules.xml, аудит Samba AD), FIM, Threat Hunting, SCA, Active Response (firewall-drop, ossec.conf), MITRE ATT&CK.
-* **Сеть:** OPNsense, VirtualBox, Destination NAT, Syslog (UDP 514), Netplan, iptables.
+* **Сеть:** OPNsense, VirtualBox, Destination NAT, Syslog (UDP 514), Netplan, iptables (iptables-persistent).
 * **Active Directory и IAM**: Samba AD DC, Kerberos (krb5), `realmd`, `sssd`, `mkhomedir`, Dnsmasq DNS & DHCP.
 * **Защита данных:** LUKS, GPG (AES-256), `shred`.
 * **ОС и утилиты:** РЕД ОС, Ubuntu Live-Server/Desktop, `tcpdump`, `apt`/`dpkg`, `ssh` (`Ed25519`, `sshd_config`), `systemctl`, Python, SQLite3.
@@ -92,6 +96,7 @@
 * **[ActiveResponse](./assets/ActiveResponse_screens)** — настройка active response в ossec.config и попытка атаки SSH сервера по 22 порту.
 * **[ActiveDirectory](./assets/ActiveDirectory_screens)** — развертывание контроллера домена UbuntuDC-VTech, структура OU и вход под доменными учетными записями.
 * **[SSHHardening](./assets/SSHHardening_screens)** — генерация ключей Ed25519 c Passphrase, настройка ssh/config и подключение по ключу к OPNsense и серверам.
+* **[Firewalliptables](./assets/Firewalliptables_screens)** — настройка политики Default Deny (iptables) на серверах SIEM и контроллере домена, проверка блокировки портов управления с клиентской станции.
 * **[WazuhMobileAlerts](./assets/WazuhMobileAlerts_screens)** — мгновенные push-уведомления на смартфон Администратора ИБ при срабатывании правила Wazuh SIEM, включая обнаружение неудачных попыток входа в домен Active Directory.
   
 
