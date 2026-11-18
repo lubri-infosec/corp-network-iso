@@ -92,7 +92,7 @@
 * **[ActiveResponse](./assets/ActiveResponse_screens)** — настройка active response в ossec.config и попытка атаки SSH сервера по 22 порту.
 * **[ActiveDirectory](./assets/ActiveDirectory_screens)** — развертывание контроллера домена UbuntuDC-VTech, структура OU и вход под доменными учетными записями.
 * **[SSHHardening](./assets/SSHHardening_screens)** — генерация ключей Ed25519 c Passphrase, настройка ssh/config и подключение по ключу к OPNsense и серверам.
-* **[WazuhMobileAlert](./assets/WazuhMobileAlert_screens)** — мгновенные push-уведомления на смартфон Администратора ИБ при срабатывании правила Wazuh SIEM, включая обнаружение неудачных попыток входа в домен Active Directory.
+* **[WazuhMobileAlerts](./assets/WazuhMobileAlerts_screens)** — мгновенные push-уведомления на смартфон Администратора ИБ при срабатывании правила Wazuh SIEM, включая обнаружение неудачных попыток входа в домен Active Directory.
   
 
 Все рабочие конфигурации ключевых узлов лежат в папке **[/configs](./configs)**:
