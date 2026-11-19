@@ -76,7 +76,12 @@
 * Разработал скрипты резервного копирования (`backup_ad.sh`, `backup_siem.sh`) для создания консистентных слепков базы Active Directory (`samba-tool domain backup offline`) и критических конфигураций серверов (`Wazuh`, `local_rules.xml`, `sshd_config`, `iptables`).
 * Настроил шифрование резервных копий алгоритмом **AES-256** (`openssl enc -aes-256-cbc -pbkdf2`), изолировал директории хранения (`/var/backups/`) правами `700`/`600` и автоматизировал запуск по расписанию cron с ротацией архивов старше 7 дней.
 
-## Использованный стек
+### Внутренний аудит безопасности и устранение уязвимостей (Pentest)
+* Провел внутренний пентест с АРМ Сотрудника (`armuser-vtech`) c использованием `nmap` и `rpcclient` для проверки устойчивости инфраструктуры к боковому перемещению.
+* Подтвердил эффективность хостовых файрволов `iptables` **Default Deny**: все 1000 портов сервера SIEM (`10.10.1.92`) и закрытые порты контроллера домена (`10.10.1.10`) полностью невидимы `filtered` для пользовательских станций.
+* Выявил и устранил две критических конфигурации: в OPNsense отключил встроенное правило Anti-Lockout Rule, привязал WebGUI только к интерфейсу `LAN` и заблокировал доступ к портам `22`, `80`, `443` шлюза для всех узлов, кроме АРМ Администратора ИБ (`10.10.1.58`). Закрыл анонимное перечисление доменных учетных записей через SMB/RPC (`restrict anonymous = 2`) и отключил устаревший протокол SMBv1 (`server min protocol = SMB2`) на контроллере домена.
+
+### Использованный стэк
 * **SIEM:** Wazuh (Indexer, Manager, Server, Dashboard), Wazuh Agent, Wazuh Integrator (custom-ntfy.py, ntfy.sh), кастомные правила корреляции (local_rules.xml, аудит Samba AD), FIM, Threat Hunting, SCA, Active Response (firewall-drop, ossec.conf), MITRE ATT&CK.
 * **Сеть:** OPNsense, VirtualBox, Destination NAT, Syslog (UDP 514), Netplan, iptables (iptables-persistent).
 * **Active Directory и IAM**: Samba AD DC, Kerberos (krb5), `realmd`, `sssd`, `mkhomedir`, Dnsmasq DNS & DHCP.
@@ -102,6 +107,7 @@
 * **[SSHHardening](./assets/SSHHardening_screens)** — генерация ключей Ed25519 c Passphrase, настройка ssh/config и подключение по ключу к OPNsense и серверам.
 * **[Firewalliptables](./assets/Firewalliptables_screens)** — настройка политики Default Deny (iptables) на серверах SIEM и контроллере домена, проверка блокировки портов управления с клиентской станции.
 * **[EncryptedBackups](./assets/EncryptedBackups_screens)** — создание зашифрованных архивов AES-256 (openssl), проверка содержимого и настройка расписания cron.
+* **[PentestMy](./assets/PentestMy_screens)** — внутренний аудит безопасности: разведка портов через (nmap), обнаружение анонимного доступа (rpcclient), настройка изоляции управления OPNsense и контрольный ретест после устранения уязвимостей.
 * **[WazuhMobileAlerts](./assets/WazuhMobileAlerts_screens)** — мгновенные push-уведомления на смартфон Администратора ИБ при срабатывании правила Wazuh SIEM, включая обнаружение неудачных попыток входа в домен Active Directory.
   
 
