@@ -13,6 +13,7 @@
 * **UbuntuServer-VTech (`10.10.1.92`)** — сервер мониторинга. Установлен полный стек Wazuh (`all-in-one`: Indexer, Server, Manager, Dashboard). Диск зашифрован через **LUKS** на этапе установки ОС.
 * **UbuntuManagerISO-VTech** — рабочее место администратора ИБ. Нужна для доступа к веб-интерфейсу Wazuh Dashboard по HTTPS (порт 443) прямо изнутри изолированного сегмента. Добавлен в домен vtech.local, вход выполняется под доменной учетной записью Администратора ИБ (`secadmin@vtech.local`) группы Domain Admins с правами sudoers.
 * **UbuntuARM-VTech** — рабочая станция обычного сотрудника. Здесь лежат тестовые данные (`vtech_secret_db`) и имитируются атаки. Добавлен в домен vtech.local, вход выполняется под доменной учетной записью Сотрудника (`employee1@vtech.local`) без прав sudo.
+* **WindowsARM-VTech (`10.10.1.87`)** — клиентский АРМ сотрудника на базе Windows 10 Pro. Добавлен в домен vtech.local, вход выполняется под доменной учетной записью Сотрудника (`employee1@vtech.local`) без прав sudo.
 
 ## Что было сделано
 
@@ -61,6 +62,7 @@
 * Развернул контроллер домена (`UbuntuDC-VTech`), отключил systemd-resolved для освобождения 53-го порта и инициализировал домен vtech.local через samba-tool domain provision с перенаправлением внешних DNS-запросов на OPNsense (`10.10.1.1`).
 * Создал организационную структуру подразделений OU и учетных записей согласно регламенту ИБ: OU - `Security Admins` учетная запись Администратора ИБ (secadmin добавлен в группу Domain Admins), OU - `Employees` учетная запись сотрудника employee1, OU - `Workstations` контейнер для введенных в домен рабочих станций (ManagerISO и armuser-vtech).
 * Ввел оба АРМ в домен через связку `realmd` и `sssd`, настроил автоматическое создание домашних директорий (`mkhomedir`) и ограничил права sudoer исключительно для группы Domain Admins на рабочей станции Администратора ИБ.
+* Развернул и ввёл в домен vtech.local клиентскую рабочую станцию на базе **Windows 10 Pro** (`WindowsARM-VTech`), настроил вход сотрудника (`employee1@vtech.local`) без прав локального администратора, подключил Wazuh Agent и провёл базовуб защиту сетевых протоколов отключив (`SMBv1`, `LLMNR` и `NetBIOS`) для защиты от перехвата учётных данных в локальной сети.
 
 ### Безопасное администрирование по SSH (SSH Hardening)
 * Сгенерировал на рабочем месте Администратора ИБ (`ManagerISO`) под доменной учетной записью `secadmin@vtech.local` пару асимметричных ключей по алгоритму **Ed25519** (`ssh-keygen -t ed25519`), защитил приватный ключ парольной фразой **Passphrase** и изолировал правами доступа `chmod 600`.
@@ -87,7 +89,7 @@
 * **Сеть:** OPNsense, VirtualBox, Destination NAT, Syslog (UDP 514), Netplan, iptables (iptables-persistent).
 * **Active Directory и IAM**: Samba AD DC, Kerberos (krb5), LDAPS, `realmd`, `sssd`, `mkhomedir`, Dnsmasq DNS & DHCP.
 * **Защита данных:** LUKS, GPG (AES-256), `shred`.
-* **ОС и утилиты:** РЕД ОС, Ubuntu Live-Server/Desktop, `tcpdump`, `apt`/`dpkg`, `ssh` (`Ed25519`, `sshd_config`), `systemctl`, `openssl`, AES-256, `tar`, `cron`, `nmap`, `rpcclient`, `ldapsearch`, Python, SQLite3.
+* **ОС и утилиты:** РЕД ОС, Ubuntu Live-Server/Desktop, Windows 10 Pro, Powershell, `tcpdump`, `apt`/`dpkg`, `ssh` (`Ed25519`, `sshd_config`), `systemctl`, `openssl`, AES-256, `tar`, `cron`, `nmap`, `rpcclient`, `ldapsearch`, Python, SQLite3.
 
 ## Что лежит в папках
 
