@@ -80,13 +80,14 @@
 * Провел внутренний пентест с АРМ Сотрудника (`armuser-vtech`) c использованием `nmap` и `rpcclient` для проверки устойчивости инфраструктуры к боковому перемещению.
 * Подтвердил эффективность хостовых файрволов `iptables` **Default Deny**: все 1000 портов сервера SIEM (`10.10.1.92`) и закрытые порты контроллера домена (`10.10.1.10`) полностью невидимы `filtered` для пользовательских станций.
 * Выявил и устранил две критических конфигурации: в OPNsense отключил встроенное правило Anti-Lockout Rule, привязал WebGUI только к интерфейсу `LAN` и заблокировал доступ к портам `22`, `80`, `443` шлюза для всех узлов, кроме АРМ Администратора ИБ (`10.10.1.58`). Закрыл анонимное перечисление доменных учетных записей через SMB/RPC (`restrict anonymous = 2`) и отключил устаревший протокол SMBv1 (`server min protocol = SMB2`) на контроллере домена.
+* Провёл аудит безопасности службы каталогов Active Directory с использованием `ldapsearch`: подтвердил блокировку анонимных запросов Anonymous LDAP Bind, принудительное требование шифрования транспорта **LDAPS** (порт 636) при аутентификации и отсутствие уязвимых пользовательских или сервисных учетных записей подверженных атакам.
 
 ### Использованный стэк
 * **SIEM:** Wazuh (Indexer, Manager, Server, Dashboard), Wazuh Agent, Wazuh Integrator (custom-ntfy.py, ntfy.sh), кастомные правила корреляции (local_rules.xml, аудит Samba AD), FIM, Threat Hunting, SCA, Active Response (firewall-drop, ossec.conf), MITRE ATT&CK.
 * **Сеть:** OPNsense, VirtualBox, Destination NAT, Syslog (UDP 514), Netplan, iptables (iptables-persistent).
-* **Active Directory и IAM**: Samba AD DC, Kerberos (krb5), `realmd`, `sssd`, `mkhomedir`, Dnsmasq DNS & DHCP.
+* **Active Directory и IAM**: Samba AD DC, Kerberos (krb5), LDAPS, `realmd`, `sssd`, `mkhomedir`, Dnsmasq DNS & DHCP.
 * **Защита данных:** LUKS, GPG (AES-256), `shred`.
-* **ОС и утилиты:** РЕД ОС, Ubuntu Live-Server/Desktop, `tcpdump`, `apt`/`dpkg`, `ssh` (`Ed25519`, `sshd_config`), `systemctl`, `openssl`, AES-256, `tar`, `cron`, Python, SQLite3.
+* **ОС и утилиты:** РЕД ОС, Ubuntu Live-Server/Desktop, `tcpdump`, `apt`/`dpkg`, `ssh` (`Ed25519`, `sshd_config`), `systemctl`, `openssl`, AES-256, `tar`, `cron`, `nmap`, `rpcclient`, `ldapsearch`, Python, SQLite3.
 
 ## Что лежит в папках
 
@@ -107,7 +108,7 @@
 * **[SSHHardening](./assets/SSHHardening_screens)** — генерация ключей Ed25519 c Passphrase, настройка ssh/config и подключение по ключу к OPNsense и серверам.
 * **[Firewalliptables](./assets/Firewalliptables_screens)** — настройка политики Default Deny (iptables) на серверах SIEM и контроллере домена, проверка блокировки портов управления с клиентской станции.
 * **[EncryptedBackups](./assets/EncryptedBackups_screens)** — создание зашифрованных архивов AES-256 (openssl), проверка содержимого и настройка расписания cron.
-* **[PentestMy](./assets/PentestMy_screens)** — внутренний аудит безопасности: разведка портов через (nmap), обнаружение анонимного доступа (rpcclient), настройка изоляции управления OPNsense и контрольный ретест после устранения уязвимостей.
+* **[PentestMy](./assets/PentestMy_screens)** — внутренний аудит безопасности: разведка портов через (nmap), обнаружение анонимного доступа (rpcclient), аудит AD LDAPS с проверкой к устойчивости к атаками (ldapsearch), настройка изоляции управления OPNsense и контрольный ретест после устранения уязвимостей.
 * **[WazuhMobileAlerts](./assets/WazuhMobileAlerts_screens)** — мгновенные push-уведомления на смартфон Администратора ИБ при срабатывании правила Wazuh SIEM, включая обнаружение неудачных попыток входа в домен Active Directory.
   
 
