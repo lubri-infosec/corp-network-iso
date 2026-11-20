@@ -120,7 +120,7 @@
 * **[opnsense-config.xml](configs/opnsense-config.xml)** — обезличенный резервный конфиг межсетевого экрана OPNsense (сегментация интерфейсов, правила фильтрации, NAT и пересылка логов Syslog).
 * **[server_ossec.conf](configs/server_ossec.conf)** — конфигурация главного сервера Wazuh (UbuntuServer-VTech): прием Syslog от OPNsense (UDP 514), правила Active Response (firewall-drop) и интеграция мобильных оповещений (custom-ntfy).
 * **[local_rules.xml](configs/local_rules.xml)** — пользовательские правила корреляции Wazuh SIEM для выявления неудачных попыток входа и атак перебора паролей (Brute-force) в домене Active Directory.
-* **[custom-ntfy.py](configs/custom-ntfy.py)** — Python-скрипт интеграции Wazuh Integrator с push-сервисом ntfy.sh для мгновенной отправки критических алертов (lvl 7+) на смартфон Администратора ИБ.
+* **[custom-ntfy.py](configs/custom-ntfy.py)** — Python-скрипт интеграции Wazuh Integrator с push-сервисом ntfy.sh для мгновенной отправки критических алертов (lvl 7+) на смартфон Администратора ИБ. Также повышена отказоустойчивость в доставке уведомлений повторными попытками отправки и увеличен таймаут TLS рукопожатия с отключением неиспользуемого IPv6.
 * **[srv_sshd_config](configs/srv_sshd_config)** — ужесточенная конфигурация SSH-демона (аутентификация строго по ключам Ed25519, запрет входа root и отключение парольного доступа).
 * **[iptables_srv.v4](configs/iptables_srv.v4)** — правила локального межсетевого экрана сервера SIEM (Default Deny) с доступом к портам управления только с АРМ Администратора ИБ.
 * **[srv_netplan.yaml](configs/srv_netplan.yaml)** — сетевая конфигурация статической IP адресации сервера UbuntuServer-VTech.
