@@ -1,6 +1,6 @@
-#!/usr/bin/env python3
 import sys
 import json
+import time
 import urllib.request
 
 alert_file = open(sys.argv[1])
@@ -8,11 +8,11 @@ hook_url = sys.argv[3]
 alert_json = json.loads(alert_file.read())
 alert_file.close()
 
-level = alert_json.get('rule', {}).get('level', 0)
-description = alert_json.get('rule', {}).get('description', 'Без описания')
-agent_name = alert_json.get('agent', {}).get('name', 'Неизвестный узел')
-srcip = alert_json.get('data', {}).get('srcip', '')
-rule_id = alert_json.get('rule', {}).get('id', '')
+level = alert_json.get("rule", {}).get("level", 0)
+description = alert_json.get("rule", {}).get("description", "Без описания")
+agent_name = alert_json.get("agent", {}).get("name", "Неизвестный узел")
+srcip = alert_json.get("data", {}).get("srcip", "")
+rule_id = alert_json.get("rule", {}).get("id", "")
 
 priority = "urgent" if level >= 12 else ("high" if level >= 8 else "default")
 
@@ -27,14 +27,22 @@ if srcip:
 message = "\n".join(msg_lines)
 title = f"Wazuh SIEM [Level {level}]"
 
-req = urllib.request.Request(
-    hook_url,
-    data=message.encode('utf-8'),
-    headers={
-        'Title': title.encode('utf-8'),
-        'Priority': priority,
-        'Tags': 'warning'
-    }
-)
-urllib.request.urlopen(req, timeout=10)
-sys.exit(0)
+for attempt in range(3):
+    try:
+        req = urllib.request.Request(
+            hook_url,
+            data=message.encode("utf-8"),
+            headers={
+                "Title": title.encode("utf-8"),
+                "Priority": priority,
+                "Tags": "warning",
+                "User-Agent": "curl/8.5.0"
+            }
+        )
+        urllib.request.urlopen(req, timeout=25)
+        sys.exit(0)
+    except Exception as e:
+        if attempt == 2:
+            sys.stderr.write(f"Failed after 3 attempts: {e}\n")
+            sys.exit(1)
+        time.sleep(2)
