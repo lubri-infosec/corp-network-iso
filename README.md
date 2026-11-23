@@ -93,10 +93,10 @@
 
 ### Использованный стэк
 * **SIEM:** Wazuh (Indexer, Manager, Server, Dashboard), Wazuh Agent, Wazuh Integrator (custom-ntfy.py, ntfy.sh), кастомные правила корреляции (local_rules.xml, аудит Samba AD), FIM, Threat Hunting, SCA, Active Response (firewall-drop, ossec.conf), MITRE ATT&CK.
-* **Сеть:** OPNsense, VirtualBox, Destination NAT, Syslog (UDP 514), Netplan, iptables (iptables-persistent).
+* **Сеть:** OPNsense (viruspot), VirtualBox, Destination NAT, Syslog (UDP 514), Netplan, iptables (iptables-persistent, hashlimit), sysctl.
 * **Active Directory и IAM**: Samba AD DC, Kerberos (krb5), LDAPS, `realmd`, `sssd`, `mkhomedir`, Dnsmasq DNS & DHCP.
 * **Защита данных:** LUKS, GPG (AES-256), `shred`.
-* **ОС и утилиты:** РЕД ОС, Ubuntu Live-Server/Desktop, Windows 10 Pro, Powershell, `tcpdump`, `apt`/`dpkg`, `ssh` (`Ed25519`, `sshd_config`), `systemctl`, `openssl`, AES-256, `tar`, `cron`, `nmap`, `rpcclient`, `ldapsearch`, Python, SQLite3.
+* **ОС и утилиты:** РЕД ОС, Ubuntu Live-Server/Desktop, Windows 10 Pro, Powershell, `tcpdump`, `apt`/`dpkg`, `ssh` (`Ed25519`, `sshd_config`), `systemctl`, `openssl`, AES-256, `tar`, `cron`, `nmap`, `rpcclient`, `ldapsearch`, `dig`, `wget`, Python, SQLite3.
 
 ## Что лежит в папках
 
