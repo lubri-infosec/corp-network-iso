@@ -85,6 +85,12 @@
 * Провёл аудит безопасности службы каталогов Active Directory с использованием `ldapsearch`: подтвердил блокировку анонимных запросов LDAP, принудительное требование шифрования транспорта **LDAPS** (порт 636) при аутентификации и отсутствие уязвимых пользовательских или сервисных учетных записей подверженных атакам.
 * Задействовал встроенный модуль **Wazuh Vulnerability Detection** для сопоставления (`WindowsARM-VTech`) c базой **CVE**. Было выявлено 3089 уязвимостей, включая 73 критического уровня. Также провел внутренний аудит конфигураций и отключил потенциальный вектор атаки через `Print Spooler`, в модуле Wazuh уязвимость высветилась результатом `passed`.
 
+### Стресс-тестирование и проверка отказоустойчивости (Anti-DDoS)
+* Укрепил сетевой **стек Linux** на серверах (`UbuntuDC-VTech` и `UbuntuServer-VTech`) через `/etc/sysctl.conf`: включил защиту от SYN-флуда (`tcp_syncookies = 1`) и увеличил очередь подключений (`tcp_max_syn_backlog = 2048`).
+* Настроил хостовый **Rate Limiting** в `iptables` через модуль `hashlimit`: ограничил частоту DNS-запросов (`udp/53`) на `10.10.1.10` до `40 req/sec` (`burst 60`) и подключений к Wazuh Dashboard (`tcp/443`) на `10.10.1.92` до `20 req/sec` (`burst 40`).
+* Защитил шлюз OPNsense (`10.10.1.1`) от переполнения таблицы состояний: задал лимиты для интерфейса `LAN` (`Max source states: 150`, `Max new connections: 30/5s`) с автобаном нарушителей в таблицу `virusprot`.
+* Провел нагрузочное тестирование со стороны `armuser-vtech` (`10.10.1.95`) с помощью `dig` и `wget`: подтвердил отброс избыточного трафика (DROP > 2600 пакетов на dc), автоблокировку источника в `virusprot` на шлюзе и полную доступность сервисов домена для легитимных клиентов.
+
 ### Использованный стэк
 * **SIEM:** Wazuh (Indexer, Manager, Server, Dashboard), Wazuh Agent, Wazuh Integrator (custom-ntfy.py, ntfy.sh), кастомные правила корреляции (local_rules.xml, аудит Samba AD), FIM, Threat Hunting, SCA, Active Response (firewall-drop, ossec.conf), MITRE ATT&CK.
 * **Сеть:** OPNsense, VirtualBox, Destination NAT, Syslog (UDP 514), Netplan, iptables (iptables-persistent).
@@ -112,9 +118,9 @@
 * **[Firewalliptables](./assets/Firewalliptables_screens)** — настройка политики Default Deny (iptables) на серверах SIEM и контроллере домена, проверка блокировки портов управления с клиентской станции.
 * **[EncryptedBackups](./assets/EncryptedBackups_screens)** — создание зашифрованных архивов AES-256 (openssl), проверка содержимого и настройка расписания cron.
 * **[PentestMy](./assets/PentestMy_screens)** — внутренний аудит безопасности: разведка портов через (nmap), обнаружение анонимного доступа (rpcclient), аудит AD LDAPS с проверкой к устойчивости к атаками (ldapsearch), настройка изоляции управления OPNsense и контрольный ретест после устранения уязвимостей.
+* **[StressTest](./assets/StressTest_screens)** — настройка Rate Limiting в iptables (hashlimit) и лимитов состояний в OPNsense, нагрузочное тестирование DNS/HTTPS (dig, wget) и срабатывание автоблокировки в таблице virusprot.
 * **[WazuhMobileAlerts](./assets/WazuhMobileAlerts_screens)** — мгновенные push-уведомления на смартфон Администратора ИБ при срабатывании правила Wazuh SIEM, включая обнаружение неудачных попыток входа в домен Active Directory.
   
-
 Все рабочие конфигурации ключевых узлов лежат в папке **[/configs](./configs)**:
 
 * **[opnsense-config.xml](configs/opnsense-config.xml)** — обезличенный резервный конфиг межсетевого экрана OPNsense (сегментация интерфейсов, правила фильтрации, NAT и пересылка логов Syslog).
